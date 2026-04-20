@@ -13,31 +13,30 @@ const {
   description = "Platform belajar pemrograman web paling santai dan mudah dipahami.",
   showSidebar = false
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://pakkoding.pages.dev');
 ---
 
 <!DOCTYPE html>
 <html lang="id">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1" />
-		<link rel="shortcut icon" href="/favicon.svg?v=1" />
-		<link rel="apple-touch-icon" href="/favicon.svg?v=1" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#2563eb" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="canonical" href={canonicalURL.href} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
     <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL.href} />
 	</head>
 	<body class="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
 		<Header />
     <slot />
-    
-    <script>
-      // Global initialization script
-      document.addEventListener('DOMContentLoaded', () => {
-        // Initialize user progress from localStorage if needed
-        console.log('GuruCode Initialized');
-      });
-    </script>
 	</body>
 </html>
-
