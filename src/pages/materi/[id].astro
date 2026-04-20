@@ -5,20 +5,18 @@ import Sidebar from '../../components/Sidebar.astro';
 import ContentArea from '../../components/ContentArea.astro';
 import { lessons } from '../../data/lessons';
 
-// Render halaman ini secara dinamis (bukan static/pre-generated)
-// Ini menghilangkan kebutuhan restart server setiap kali data lessons berubah.
-export const prerender = false;
-
-const { id } = Astro.params;
-const lessonIndex = lessons.findIndex(l => l.id === id);
-
-if (lessonIndex === -1) {
-  return Astro.redirect('/kurikulum');
+export async function getStaticPaths() {
+  return lessons.map((lesson, index) => {
+    const prevLessonId = index > 0 ? lessons[index - 1].id : null;
+    const nextLessonId = index < lessons.length - 1 ? lessons[index + 1].id : null;
+    return {
+      params: { id: lesson.id },
+      props: { lesson, prevLessonId, nextLessonId },
+    };
+  });
 }
 
-const lesson = lessons[lessonIndex];
-const prevLessonId = lessonIndex > 0 ? lessons[lessonIndex - 1].id : null;
-const nextLessonId = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].id : null;
+const { lesson, prevLessonId, nextLessonId } = Astro.props;
 ---
 
 <Layout title={`${lesson.title} - Pak Koding`} description={lesson.description}>
