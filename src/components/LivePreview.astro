@@ -1,0 +1,130 @@
+---
+// src/components/LivePreview.astro
+interface Props {
+  code: string;
+}
+
+const { code } = Astro.props;
+
+// Detect if the code is pure JavaScript (no HTML tags)
+const hasHtmlTags = /<[a-zA-Z][^>]*>/.test(code);
+const isJsOnly = !hasHtmlTags || (code.trim().startsWith('//') && !code.includes('<'));
+
+const isFullHtml = code.toLowerCase().includes('<html') || code.toLowerCase().includes('<!doctype');
+
+// For JS-only code: wrap in a virtual console that captures console.log output
+const jsPreviewHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Courier New', monospace; 
+            padding: 16px;
+            background: #0f172a;
+            color: #94a3b8;
+            min-height: 100%;
+        }
+        .console-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1e293b;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #475569;
+            font-family: system-ui, sans-serif;
+            font-weight: 700;
+        }
+        .console-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+        .log-line {
+            padding: 4px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .log-line::before {
+            content: '>';
+            color: #3b82f6;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="console-header">
+        <div class="console-dot"></div>
+        Console Output
+    </div>
+    <div id="console-output"></div>
+    <script>
+        const output = document.getElementById('console-output');
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.textContent = args.map(a => {
+                if (typeof a === 'object') return JSON.stringify(a, null, 2);
+                return String(a);
+            }).join(' ');
+            output.appendChild(line);
+            originalLog.apply(console, args);
+        };
+        try {
+            ${code}
+        } catch(e) {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.style.color = '#ef4444';
+            line.textContent = 'Error: ' + e.message;
+            output.appendChild(line);
+        }
+    </script>
+</body>
+</html>
+`;
+
+// For HTML code: use the original approach
+const htmlPreviewHtml = isFullHtml ? code : `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            padding: 20px;
+            margin: 0;
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+    ${code}
+</body>
+</html>
+`;
+
+const previewHtml = isJsOnly ? jsPreviewHtml : htmlPreviewHtml;
+---
+
+<div class="live-preview border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm my-8">
+  <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 border-b border-slate-200 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+    <div class={`w-2 h-2 rounded-full ${isJsOnly ? 'bg-blue-500' : 'bg-emerald-500'}`}></div>
+    {isJsOnly ? 'Console Output' : 'Hasil Preview'}
+  </div>
+  <div class={`p-0 relative min-h-[200px] ${isJsOnly ? 'bg-[#0f172a]' : 'bg-white'}`}>
+    <iframe
+      srcdoc={previewHtml}
+      class="w-full min-h-[200px] border-none"
+      title="Live Preview"
+      sandbox="allow-scripts allow-same-origin"
+    ></iframe>
+  </div>
+</div>
+

@@ -1,0 +1,142 @@
+---
+import Logo from './Logo.astro';
+---
+
+<header class="h-[72px] bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-12 sticky top-0 z-50">
+  <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+    <a href="/" class="flex items-center gap-2 cursor-pointer shrink-0 group">
+      <Logo />
+    </a>
+    
+
+  </div>
+  
+
+  
+  <nav class="hidden md:flex items-center gap-8">
+    <a href="/" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">Home</a>
+    <a href="/kurikulum" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">Kurikulum</a>
+    <a href="/faq" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">FAQ</a>
+    <a href="#" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">Komunitas</a>
+  </nav>
+
+  <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+    <div id="user-auth-section">
+      <!-- Auth buttons or user menu will be injected here by client-side script -->
+      <div class="flex items-center gap-1 sm:gap-2">
+        <span class="text-xs sm:text-sm font-bold text-slate-300 px-2 sm:px-4 py-2 cursor-not-allowed">Masuk</span>
+        <span class="bg-slate-100 text-slate-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold cursor-not-allowed">Daftar</span>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu Toggle (Only visible on lesson pages usually) -->
+    <!-- Mobile Menu Toggle -->
+    <button id="mobile-menu-toggle" class="md:hidden p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 shrink-0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </div>
+
+  <!-- Sidebar Backdrop (Mobile) -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 z-[65] hidden md:hidden transition-opacity duration-300 opacity-0"></div>
+</header>
+
+<script>
+  // src/scripts/header.js
+  import { lessons } from '../data/lessons';
+
+  function updateHeader() {
+    const userAuthSection = document.getElementById('user-auth-section');
+    
+    const savedUser = localStorage.getItem('gurucode_current_user');
+    const currentUser = savedUser ? JSON.parse(savedUser) : null;
+    
+    let completed = [];
+    if (currentUser) {
+      completed = currentUser.completedLessons || [];
+    } else {
+      const saved = localStorage.getItem('gurucode_completed');
+      if (saved) completed = JSON.parse(saved);
+    }
+    
+
+    
+    // Update Auth Section
+    if (currentUser && userAuthSection) {
+      const initials = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : currentUser.email.charAt(0).toUpperCase();
+      userAuthSection.innerHTML = `
+        <div class="relative group">
+          <button class="flex items-center gap-2 p-1 sm:p-1.5 sm:pr-3 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-all" id="user-menu-button">
+            <div class="w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">
+              ${initials}
+            </div>
+            <div class="hidden md:block text-left">
+              <div class="text-[10px] font-bold text-slate-400 uppercase leading-none">Siswa</div>
+              <div class="text-xs font-bold text-slate-700 truncate max-w-[80px] lg:max-w-[120px]">
+                ${currentUser.name || 'Profil'}
+              </div>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" size="14" class="text-slate-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          
+          <div id="user-dropdown" class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-[60] animate-in fade-in zoom-in-95 duration-200">
+            <div class="px-4 py-2 border-b border-slate-50 mb-2">
+              <p class="text-[10px] font-bold text-slate-400 uppercase">Email</p>
+              <p class="text-xs text-slate-600 truncate">${currentUser.email}</p>
+            </div>
+            <a href="/profil" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Edit Profil
+            </a>
+            <button id="logout-button" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Keluar
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('logout-button')?.addEventListener('click', () => {
+        localStorage.removeItem('gurucode_current_user');
+        window.location.reload();
+      });
+    }
+
+
+  }
+
+  // Initialize
+  updateHeader();
+  
+  // Sidebar Toggle Logic
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+  const closeSidebar = document.getElementById('close-sidebar');
+
+  function toggleSidebar(open) {
+    if (!sidebar || !sidebarBackdrop) return;
+    
+    if (open) {
+      sidebar.classList.remove('-translate-x-full');
+      sidebar.classList.add('translate-x-0');
+      sidebarBackdrop.classList.remove('hidden');
+      setTimeout(() => sidebarBackdrop.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    } else {
+      sidebar.classList.remove('translate-x-0');
+      sidebar.classList.add('-translate-x-full');
+      sidebarBackdrop.classList.remove('opacity-100');
+      setTimeout(() => {
+        sidebarBackdrop.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  }
+
+  mobileMenuToggle?.addEventListener('click', () => toggleSidebar(true));
+  sidebarBackdrop?.addEventListener('click', () => toggleSidebar(false));
+  closeSidebar?.addEventListener('click', () => toggleSidebar(false));
+
+  // Listen for progress updates from other components
+  window.addEventListener('progress-updated', updateHeader);
+</script>

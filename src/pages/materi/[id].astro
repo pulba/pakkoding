@@ -1,0 +1,99 @@
+---
+// src/pages/materi/[id].astro
+import Layout from '../../layouts/Layout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import ContentArea from '../../components/ContentArea.astro';
+import { lessons } from '../../data/lessons';
+
+// Render halaman ini secara dinamis (bukan static/pre-generated)
+// Ini menghilangkan kebutuhan restart server setiap kali data lessons berubah.
+export const prerender = false;
+
+const { id } = Astro.params;
+const lessonIndex = lessons.findIndex(l => l.id === id);
+
+if (lessonIndex === -1) {
+  return Astro.redirect('/kurikulum');
+}
+
+const lesson = lessons[lessonIndex];
+const prevLessonId = lessonIndex > 0 ? lessons[lessonIndex - 1].id : null;
+const nextLessonId = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].id : null;
+---
+
+<Layout title={`${lesson.title} - Pak Koding`} description={lesson.description}>
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Sidebar -->
+    <Sidebar activeLessonId={lesson.id} selectedCategory={lesson.category} />
+
+    <!-- Main Content -->
+    <main class="flex-1 min-w-0 overflow-y-auto">
+      <div class="px-6 md:px-12 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <a 
+          href="/kurikulum"
+          class="flex items-center gap-2 text-slate-400 hover:text-slate-900 text-sm font-medium transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Kembali ke Pilih Materi
+        </a>
+
+        <!-- Progress Indicator -->
+        <div class="flex items-center gap-4" id="lesson-progress-container">
+          <div class="flex flex-col gap-1 min-w-[180px]">
+            <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              <span>Progres Kursus</span>
+              <span id="lesson-progress-text">0%</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
+              <div 
+                id="lesson-progress-bar"
+                class="h-full bg-blue-500 transition-all duration-500 ease-out"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        import { lessons } from '../../data/lessons';
+
+        function updateProgress() {
+          const progressText = document.getElementById('lesson-progress-text');
+          const progressBar = document.getElementById('lesson-progress-bar');
+          
+          const savedUser = localStorage.getItem('gurucode_current_user');
+          const currentUser = savedUser ? JSON.parse(savedUser) : null;
+          
+          let completed = [];
+          if (currentUser) {
+            completed = currentUser.completedLessons || [];
+          } else {
+            const saved = localStorage.getItem('gurucode_completed');
+            if (saved) completed = JSON.parse(saved);
+          }
+          
+          const totalLessons = lessons.length;
+          const progressPercentage = Math.round((completed.length / totalLessons) * 100);
+          
+          if (progressText) progressText.textContent = `${progressPercentage}%`;
+          if (progressBar) progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Initial update
+        updateProgress();
+
+        // Listen for updates
+        window.addEventListener('progress-updated', updateProgress);
+      </script>
+      
+      <ContentArea 
+        lesson={lesson} 
+        prevLessonId={prevLessonId}
+        nextLessonId={nextLessonId}
+      />
+      
+
+    </main>
+  </div>
+</Layout>

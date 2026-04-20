@@ -1,0 +1,84 @@
+---
+// src/pages/faq.astro
+import Layout from '../layouts/Layout.astro';
+import { faqData } from '../data/faq';
+---
+
+<Layout title="FAQ - Pak Koding">
+  <div class="flex-1 p-6 md:p-12 max-w-4xl mx-auto w-full">
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      </div>
+      <h1 class="text-4xl font-black text-slate-900 mb-4 tracking-tight">Pertanyaan Umum (FAQ)</h1>
+      <p class="text-lg text-slate-500">Temukan jawaban untuk pertanyaan yang sering diajukan tentang Pak Koding dan Web Development.</p>
+    </div>
+
+    <div class="space-y-4">
+      {faqData.map((item, index) => (
+        <div 
+          class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all duration-200 hover:border-blue-300"
+        >
+          <button
+            class="faq-toggle w-full flex items-center justify-between p-6 text-left focus:outline-none"
+            data-index={index}
+          >
+            <div class="flex flex-col gap-1">
+              <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">{item.category}</span>
+              <span class="text-lg font-bold text-slate-900">{item.question}</span>
+            </div>
+            <div class="chevron p-2 rounded-lg bg-slate-50 text-slate-400 transition-transform duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </button>
+          
+          <div 
+            class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out"
+          >
+            <div class="p-6 pt-0 text-slate-600 leading-relaxed border-t border-slate-50">
+              {item.answer}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-20 p-8 bg-blue-600 rounded-3xl text-center text-white">
+      <h3 class="text-2xl font-bold mb-2">Masih punya pertanyaan?</h3>
+      <p class="text-blue-100 mb-8">Jangan ragu untuk menghubungi komunitas kami melalui grup diskusi.</p>
+      <a 
+        href="#" 
+        class="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors"
+      >
+        Gabung Komunitas
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const toggle = item.querySelector('.faq-toggle');
+      const content = item.querySelector('.faq-content');
+      const chevron = item.querySelector('.chevron');
+
+      toggle?.addEventListener('click', () => {
+        const isOpen = content?.classList.contains('max-h-[500px]');
+        
+        // Close all others
+        document.querySelectorAll('.faq-content').forEach(c => {
+          c.classList.remove('max-h-[500px]', 'opacity-100');
+          c.classList.add('max-h-0', 'opacity-0');
+        });
+        document.querySelectorAll('.chevron').forEach(ch => {
+          ch.classList.remove('rotate-180', 'bg-blue-50', 'text-blue-600');
+        });
+
+        if (!isOpen) {
+          content?.classList.remove('max-h-0', 'opacity-0');
+          content?.classList.add('max-h-[500px]', 'opacity-100');
+          chevron?.classList.add('rotate-180', 'bg-blue-50', 'text-blue-600');
+        }
+      });
+    });
+  </script>
+</Layout>
