@@ -1,8 +1,10 @@
 ---
 // src/components/ContentArea.astro
-import { type Lesson } from "../data/lessons";
+import { type CollectionEntry } from "astro:content";
 import CodeBlock from "./CodeBlock.astro";
 import LivePreview from "./LivePreview.astro";
+
+type Lesson = { id: string } & CollectionEntry<"materi">["data"];
 
 interface Props {
   lesson: Lesson;
@@ -337,7 +339,7 @@ const getPillColor = (category: string) => {
 </div>
 
 <script>
-  function setupLessonCompletion() {
+  async function setupLessonCompletion() {
     const lessonContent = document.getElementById("lesson-content");
     const lessonId = lessonContent?.getAttribute("data-lesson-id");
     const toggleBtn = document.getElementById("toggle-complete-btn");
@@ -347,88 +349,84 @@ const getPillColor = (category: string) => {
 
     if (!lessonId || !toggleBtn) return;
 
-    function getCompleted() {
-      const savedUser = localStorage.getItem("gurucode_current_user");
-      const currentUser = savedUser ? JSON.parse(savedUser) : null;
-      if (currentUser) return currentUser.completedLessons || [];
-      const saved = localStorage.getItem("gurucode_completed");
-      return saved ? JSON.parse(saved) : [];
-    }
+    let completedList: string[] = [];
+    let isAuthenticated = false;
 
-    function setCompleted(list) {
-      const savedUser = localStorage.getItem("gurucode_current_user");
-      const currentUser = savedUser ? JSON.parse(savedUser) : null;
-      if (currentUser) {
-        currentUser.completedLessons = list;
-        localStorage.setItem(
-          "gurucode_current_user",
-          JSON.stringify(currentUser),
-        );
-
-        // Also update in global users list
-        const users = JSON.parse(
-          localStorage.getItem("gurucode_users") || "[]",
-        );
-        const updatedUsers = users.map((u) =>
-          u.email === currentUser.email ? { ...u, completedLessons: list } : u,
-        );
-        localStorage.setItem("gurucode_users", JSON.stringify(updatedUsers));
-      } else {
-        localStorage.setItem("gurucode_completed", JSON.stringify(list));
+    // Fetch initial state
+    try {
+      const res = await fetch('/api/me');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.authenticated && data.user) {
+          isAuthenticated = true;
+          completedList = data.user.completed_lessons || [];
+        }
       }
-
-      // Notify other components
-      window.dispatchEvent(new CustomEvent("progress-updated"));
+    } catch (e) {
+      console.error("Failed to fetch user state", e);
     }
 
     function updateUI() {
-      const list = getCompleted();
-      const isCompleted = list.includes(lessonId);
+      const isCompleted = completedList.includes(lessonId as string);
 
       if (isCompleted) {
-        toggleBtn.classList.remove(
-          "bg-blue-600",
-          "hover:bg-blue-700",
-          "text-white",
-        );
-        toggleBtn.classList.add(
-          "bg-emerald-50",
-          "text-emerald-700",
-          "ring-1",
-          "ring-emerald-200",
-          "hover:bg-emerald-100",
-        );
+        toggleBtn?.classList.remove("bg-blue-600", "hover:bg-blue-700", "text-white");
+        toggleBtn?.classList.add("bg-emerald-50", "text-emerald-700", "ring-1", "ring-emerald-200", "hover:bg-emerald-100");
         iconTodo?.classList.add("hidden");
         iconDone?.classList.remove("hidden");
         if (statusText) statusText.textContent = "Selesai";
       } else {
-        toggleBtn.classList.add(
-          "bg-blue-600",
-          "hover:bg-blue-700",
-          "text-white",
-        );
-        toggleBtn.classList.remove(
-          "bg-emerald-50",
-          "text-emerald-700",
-          "ring-1",
-          "ring-emerald-200",
-          "hover:bg-emerald-100",
-        );
+        toggleBtn?.classList.add("bg-blue-600", "hover:bg-blue-700", "text-white");
+        toggleBtn?.classList.remove("bg-emerald-50", "text-emerald-700", "ring-1", "ring-emerald-200", "hover:bg-emerald-100");
         iconTodo?.classList.remove("hidden");
         iconDone?.classList.add("hidden");
         if (statusText) statusText.textContent = "Selesai";
       }
+
+      // Notify Sidebar and Topbar progress
+      window.dispatchEvent(new CustomEvent("progress-updated", { detail: { completedList } }));
     }
 
-    toggleBtn.addEventListener("click", () => {
-      let list = getCompleted();
-      if (list.includes(lessonId)) {
-        list = list.filter((id) => id !== lessonId);
-      } else {
-        list.push(lessonId);
+    toggleBtn.addEventListener("click", async () => {
+      if (!isAuthenticated) {
+        alert("Silakan masuk terlebih dahulu untuk menyimpan progres belajar Anda.");
+        window.location.href = '/masuk';
+        return;
       }
-      setCompleted(list);
+
+      const isCurrentlyCompleted = completedList.includes(lessonId as string);
+      const newStatus = !isCurrentlyCompleted;
+
+      // Optimistic update UI
+      if (newStatus) {
+        completedList.push(lessonId as string);
+      } else {
+        completedList = completedList.filter(id => id !== lessonId);
+      }
       updateUI();
+
+      // Send to server
+      try {
+        const res = await fetch('/api/progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonId, isCompleted: newStatus })
+        });
+        
+        if (!res.ok) {
+          throw new Error("Gagal menyimpan progres");
+        }
+      } catch (e) {
+        console.error(e);
+        // Revert UI on failure
+        if (!newStatus) {
+          completedList.push(lessonId as string);
+        } else {
+          completedList = completedList.filter(id => id !== lessonId);
+        }
+        updateUI();
+        alert("Gagal menyimpan progres. Silakan coba lagi.");
+      }
     });
 
     updateUI();

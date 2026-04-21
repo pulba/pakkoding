@@ -1,6 +1,6 @@
 ---
 // src/components/Sidebar.astro
-import { lessons } from "../data/lessons";
+import { getCollection } from "astro:content";
 
 interface Props {
   activeLessonId?: string;
@@ -11,6 +11,11 @@ const { activeLessonId, selectedCategory } = Astro.props;
 const categories = selectedCategory
   ? [selectedCategory]
   : ["HTML", "CSS", "JS", "Tools", "Koding", "AI"];
+
+const allMateri = await getCollection("materi");
+const lessons = allMateri
+  .map(entry => ({ id: entry.id, ...entry.data }))
+  .sort((a, b) => a.order - b.order);
 
 function getIcon(category: string) {
   switch (category) {
@@ -118,18 +123,7 @@ function getIcon(category: string) {
 </aside>
 
 <script>
-  function updateSidebarCheckmarks() {
-    const savedUser = localStorage.getItem("gurucode_current_user");
-    const currentUser = savedUser ? JSON.parse(savedUser) : null;
-
-    let completed = [];
-    if (currentUser) {
-      completed = currentUser.completedLessons || [];
-    } else {
-      const saved = localStorage.getItem("gurucode_completed");
-      if (saved) completed = JSON.parse(saved);
-    }
-
+  function updateSidebarCheckmarks(completed = []) {
     document.querySelectorAll("[data-lesson-id]").forEach((link) => {
       const lessonId = link.getAttribute("data-lesson-id");
       const checklist = link.querySelector(".checklist-icon");
@@ -141,9 +135,10 @@ function getIcon(category: string) {
     });
   }
 
-  // Initialize
-  updateSidebarCheckmarks();
-
   // Listen for progress updates
-  window.addEventListener("progress-updated", updateSidebarCheckmarks);
+  window.addEventListener("progress-updated", (e: any) => {
+    if (e.detail && e.detail.completedList) {
+      updateSidebarCheckmarks(e.detail.completedList);
+    }
+  });
 </script>

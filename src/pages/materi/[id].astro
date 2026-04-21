@@ -3,20 +3,28 @@
 import Layout from '../../layouts/Layout.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import ContentArea from '../../components/ContentArea.astro';
-import { lessons } from '../../data/lessons';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  return lessons.map((lesson, index) => {
-    const prevLessonId = index > 0 ? lessons[index - 1].id : null;
-    const nextLessonId = index < lessons.length - 1 ? lessons[index + 1].id : null;
+  const allMateri = await getCollection('materi');
+  allMateri.sort((a, b) => a.data.order - b.data.order);
+  
+  return allMateri.map((entry, index) => {
+    const prevLessonId = index > 0 ? allMateri[index - 1].id : null;
+    const nextLessonId = index < allMateri.length - 1 ? allMateri[index + 1].id : null;
     return {
-      params: { id: lesson.id },
-      props: { lesson, prevLessonId, nextLessonId },
+      params: { id: entry.id },
+      props: { 
+        lesson: { id: entry.id, ...entry.data }, 
+        prevLessonId, 
+        nextLessonId,
+        totalLessons: allMateri.length
+      },
     };
   });
 }
 
-const { lesson, prevLessonId, nextLessonId } = Astro.props;
+const { lesson, prevLessonId, nextLessonId, totalLessons } = Astro.props;
 ---
 
 <Layout title={`${lesson.title} - Pak Koding`} description={lesson.description}>
@@ -53,36 +61,23 @@ const { lesson, prevLessonId, nextLessonId } = Astro.props;
         </div>
       </div>
 
-      <script>
-        import { lessons } from '../../data/lessons';
-
-        function updateProgress() {
+      <script define:vars={{ totalLessons }}>
+        function updateProgress(completedLessons) {
           const progressText = document.getElementById('lesson-progress-text');
           const progressBar = document.getElementById('lesson-progress-bar');
           
-          const savedUser = localStorage.getItem('gurucode_current_user');
-          const currentUser = savedUser ? JSON.parse(savedUser) : null;
-          
-          let completed = [];
-          if (currentUser) {
-            completed = currentUser.completedLessons || [];
-          } else {
-            const saved = localStorage.getItem('gurucode_completed');
-            if (saved) completed = JSON.parse(saved);
-          }
-          
-          const totalLessons = lessons.length;
-          const progressPercentage = Math.round((completed.length / totalLessons) * 100);
+          const progressPercentage = Math.round(((completedLessons || []).length / totalLessons) * 100);
           
           if (progressText) progressText.textContent = `${progressPercentage}%`;
           if (progressBar) progressBar.style.width = `${progressPercentage}%`;
         }
 
-        // Initial update
-        updateProgress();
-
-        // Listen for updates
-        window.addEventListener('progress-updated', updateProgress);
+        // Listen for updates from ContentArea or Sidebar
+        window.addEventListener('progress-updated', (e) => {
+          if (e.detail && e.detail.completedList) {
+            updateProgress(e.detail.completedList);
+          }
+        });
       </script>
       
       <ContentArea 

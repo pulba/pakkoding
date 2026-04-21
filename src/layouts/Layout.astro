@@ -38,5 +38,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://pakkodin
 	<body class="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
 		<Header />
     <slot />
+    
+    <script>
+      // Global Auth & Progress State
+      async function initGlobalState() {
+        try {
+          const res = await fetch('/api/me');
+          if (res.ok) {
+            const data = await res.json();
+            if (data.authenticated && data.user) {
+              const completedList = data.user.completed_lessons || [];
+              window.dispatchEvent(new CustomEvent("progress-updated", { detail: { completedList } }));
+              window.dispatchEvent(new CustomEvent("user-authenticated", { detail: { user: data.user } }));
+            }
+          }
+        } catch (e) {
+          console.error("Global state error:", e);
+        }
+      }
+      initGlobalState();
+    </script>
 	</body>
 </html>
