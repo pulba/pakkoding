@@ -13,12 +13,7 @@ const isBuilding = process.argv.includes('build');
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
-  adapter: isBuilding ? cloudflare({
-    platformProxy: {
-      configPath: './wrangler.toml',
-      experimentalJsonConfig: false,
-    },
-  }) : undefined,
+  adapter: isBuilding ? cloudflare() : undefined,
   integrations: [],
   server: {
     host: '0.0.0.0'

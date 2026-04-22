@@ -27,14 +27,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // Cek apakah user sudah ada di Turso
     const result = await turso.execute({
       sql: 'SELECT * FROM users WHERE id = ?',
-      args: [uid]
+      args: [uid as string]
     });
 
     if (result.rows.length === 0) {
       // User baru, masukkan ke database
       await turso.execute({
         sql: 'INSERT INTO users (id, email, name, avatar, completed_lessons, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-        args: [uid, email, name, picture, '[]', Date.now()]
+        args: [uid as string, email as string, name as string, picture as string, '[]', Date.now()]
       });
     }
 

@@ -1,7 +1,14 @@
 import { createClient } from "@libsql/client/web";
 
-const tursoUrl = process.env.TURSO_DATABASE_URL || import.meta.env.TURSO_DATABASE_URL;
-const tursoAuthToken = process.env.TURSO_AUTH_TOKEN || import.meta.env.TURSO_AUTH_TOKEN;
+const getEnv = (key: string) => {
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+    return process.env[key];
+  }
+  return import.meta.env[key];
+};
+
+const tursoUrl = getEnv('TURSO_DATABASE_URL');
+const tursoAuthToken = getEnv('TURSO_AUTH_TOKEN');
 
 export const turso = createClient({
   url: tursoUrl,
