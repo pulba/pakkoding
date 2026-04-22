@@ -6,16 +6,12 @@ import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Cloudflare adapter hanya digunakan saat build (production).
-// Saat dev, Astro menggunakan Node.js dev server bawaan yang mendukung semua modul.
-const isBuilding = process.argv.includes('build');
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
-  adapter: isBuilding ? cloudflare({
-    imageService: 'cloudflare'
-  }) : undefined,
+  output: 'static',
+  adapter: cloudflare(),
+  trailingSlash: 'always',
   integrations: [],
   server: {
     host: '0.0.0.0'
