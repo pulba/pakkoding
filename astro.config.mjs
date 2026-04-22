@@ -12,8 +12,10 @@ const isBuilding = process.argv.includes('build');
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
-  adapter: isBuilding ? cloudflare() : undefined,
+  output: 'server',
+  adapter: isBuilding ? cloudflare({
+    imageService: 'cloudflare'
+  }) : undefined,
   integrations: [],
   server: {
     host: '0.0.0.0'

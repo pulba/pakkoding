@@ -5,6 +5,8 @@ import Sidebar from '../../components/Sidebar.astro';
 import ContentArea from '../../components/ContentArea.astro';
 import { getCollection } from 'astro:content';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const allMateri = await getCollection('materi');
   allMateri.sort((a, b) => a.data.order - b.data.order);
