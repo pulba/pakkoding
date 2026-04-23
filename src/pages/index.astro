@@ -1,50 +1,163 @@
 ---
-// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 ---
 
 <Layout>
-  <div class="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-4xl mx-auto">
-    <h1 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
-      Selamat Datang di <span class="text-blue-600">Pak Koding</span>
-    </h1>
-    <p class="text-lg md:text-xl text-slate-600 mb-12 leading-relaxed">
-      Platform belajar pemrograman web paling santai dan mudah dipahami. 
-      Mulai perjalananmu menjadi developer profesional dari nol.
-    </p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mt-4">
-      <!-- Card 1: Web Dev -->
-      <a 
-        href="/kurikulum#web-dev"
-        class="group cursor-pointer bg-white p-8 rounded-2xl border-2 border-slate-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300 w-full relative overflow-hidden text-left flex flex-col h-full"
-      >
-        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-        </div>
-        <h2 class="text-2xl font-bold text-slate-900 mb-2">Belajar Dasar Pemrograman Web</h2>
-        <p class="text-slate-500 mb-8 flex-grow">Kuasai HTML, CSS, dan JavaScript dalam satu jalur pembelajaran terpadu untuk membangun website.</p>
-        
-        <div class="flex items-center text-blue-600 font-bold gap-2 group-hover:gap-4 transition-all mt-auto">
-          Mulai Sekarang <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </div>
-      </a>
+  <div class="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-6xl mx-auto py-12 md:py-24 relative">
+    <!-- Floating Decor -->
+    <div class="absolute top-20 left-10 w-24 h-24 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-20 right-10 w-32 h-32 bg-indigo-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
 
-      <!-- Card 2: Koding & AI -->
-      <a 
-        href="/kurikulum#ai"
-        class="group cursor-pointer bg-white p-8 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 hover:shadow-xl transition-all duration-300 w-full relative overflow-hidden text-left flex flex-col h-full"
-      >
-        <div class="w-16 h-16 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 transition-transform shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
+    <!-- Hero Section -->
+    <div class="mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-xs font-black mb-8 border border-blue-100 dark:border-blue-800 shadow-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        Selamat datang di Pak Koding
+      </div>
+      <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 dark:text-white mb-8 tracking-tighter leading-[1.1] md:leading-[0.9]">
+        Belajar Koding <br/>
+        <span id="typewriter" class="text-blue-600 dark:text-blue-400 border-r-[0.1em] border-blue-600 dark:border-blue-400 pr-1 inline-block max-w-full break-words leading-none"></span>
+      </h1>
+
+<script>
+  const textElement = document.getElementById('typewriter');
+  const phrases = ['Jadi Gampang.', 'Jadi Seru.', 'Tanpa Ribet.', 'Masa Depanmu.'];
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typeSpeed = 150;
+
+  function type() {
+    const currentPhrase = phrases[phraseIndex];
+    
+    if (isDeleting) {
+      textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+      charIndex--;
+      typeSpeed = 50;
+    } else {
+      textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+      charIndex++;
+      typeSpeed = 150;
+    }
+
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      isDeleting = true;
+      typeSpeed = 2000; // Pause at end
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      typeSpeed = 500; // Pause before typing next
+    }
+
+    setTimeout(type, typeSpeed);
+  }
+
+  // Start the animation after page load
+  setTimeout(type, 1500);
+</script>
+
+<style>
+  #typewriter {
+    animation: blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #2563eb; }
+  }
+
+  @media (max-width: 640px) {
+    #typewriter {
+      /* Removed min-height to fix cursor height */
+    }
+  }
+</style>
+      <p class="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto leading-relaxed mb-10">
+        Platform edukasi gratis untuk pemula. Belajar teknologi modern dengan kurikulum yang santai tapi tetap berbobot.
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/kurikulum" class="px-10 py-4 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-slate-800 dark:hover:bg-blue-700 transition-all hover:shadow-2xl hover:scale-105 active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none">
+          Lihat Kurikulum
+        </a>
+        <a href="/faq" class="px-10 py-4 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-2xl font-black text-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:border-slate-300 active:scale-95">
+          Tanya Sesuatu
+        </a>
+      </div>
+    </div>
+    
+    <!-- Dasar Web Section -->
+    <div class="w-full mt-16 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 max-w-6xl text-left">
+      <div class="flex items-center gap-4 mb-8 justify-center md:justify-start">
+        <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200 dark:shadow-none shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
         </div>
-        <h2 class="text-2xl font-bold text-slate-900 mb-2">Koding dan Kecerdasan Artifisial</h2>
-        <p class="text-slate-500 mb-8 flex-grow">Pahami fundamental koding dan selami dunia Artificial Intelligence, Machine Learning, hingga NLP.</p>
-        
-        <div class="flex items-center text-indigo-600 font-bold gap-2 group-hover:gap-4 transition-all mt-auto">
-          Mulai Sekarang <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dasar Pemrograman Web</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {[
+          { title: 'Persiapan', desc: 'Alat koding utama.', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg', link: '/materi/persiapan-belajar' },
+          { title: 'HTML5', desc: 'Struktur website.', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg', link: '/materi/html-intro' },
+          { title: 'CSS3 Modern', desc: 'Desain visual.', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg', link: '/materi/css-intro' },
+          { title: 'JavaScript', desc: 'Logika interaktif.', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', link: '/materi/js-intro' }
+        ].map((item) => (
+          <a 
+            href={item.link}
+            class="group cursor-pointer bg-white/70 dark:bg-slate-900/50 backdrop-blur-sm p-4 md:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 flex md:flex-col items-center md:items-start gap-4 md:gap-0"
+          >
+            <div class="w-12 h-12 md:w-14 md:h-14 md:mb-6 bg-white dark:bg-slate-800 rounded-2xl p-2.5 md:p-3 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shrink-0 flex items-center justify-center overflow-hidden">
+              <Image src={item.logo} alt={item.title} width={48} height={48} class="w-full h-full object-contain" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-base md:text-lg font-bold text-slate-900 dark:text-white mb-1 md:mb-2">{item.title}</h3>
+              <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm leading-relaxed mb-3 md:mb-4">{item.desc}</p>
+              <div class="text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                Mulai <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- AI Section -->
+    <div class="w-full mt-20 mb-20 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500 max-w-6xl text-left">
+      <div class="flex items-center gap-4 mb-8 justify-center md:justify-start">
+        <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-none shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path></svg>
         </div>
-      </a>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Koding & AI</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+        {[
+          { title: 'Dasar Koding', desc: 'Algoritma cerdas & logika.', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/thealgorithms/thealgorithms-original.svg', link: '/materi/koding-intro' },
+          { title: 'Artificial Intelligence', desc: 'Machine Learning & Deep Learning.', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg', link: '/materi/ai-definisi' }
+        ].map((item) => (
+          <a 
+            href={item.link}
+            class="group cursor-pointer bg-white/70 dark:bg-slate-900/50 backdrop-blur-sm p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
+          >
+            <div class="flex gap-4 md:gap-8 items-center">
+              <div class="w-14 h-14 md:w-20 md:h-20 bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl p-3 md:p-4 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shrink-0 flex items-center justify-center overflow-hidden">
+                <Image src={item.logo} alt={item.title} width={80} height={80} class="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h3 class="text-lg md:text-2xl font-bold text-slate-900 dark:text-white mb-1 md:mb-2">{item.title}</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-base leading-relaxed mb-3 md:mb-4">{item.desc}</p>
+                <div class="text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Mulai Modul <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   </div>
 </Layout>

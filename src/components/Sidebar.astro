@@ -36,11 +36,11 @@ function getIcon(category: string) {
 ---
 
 <aside
-  class="fixed inset-y-0 left-0 z-[50] lg:z-[40] w-72 bg-white border-r border-slate-200 h-full overflow-y-auto transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0 md:block shrink-0 shadow-2xl md:shadow-none"
+  class="fixed inset-y-0 left-0 z-[50] lg:z-[40] w-72 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 h-full overflow-y-auto transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0 md:block shrink-0 shadow-2xl md:shadow-none"
   id="sidebar"
 >
   <div
-    class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between"
+    class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between"
   >
     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">
       Kurikulum Belajar
@@ -89,8 +89,8 @@ function getIcon(category: string) {
                     data-lesson-id={lesson.id}
                     class={`w-full text-left px-4 py-2 rounded-lg text-sm transition-all duration-200 flex items-center justify-between group ${
                       activeLessonId === lesson.id
-                        ? "bg-blue-50 text-blue-600 font-semibold"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold"
+                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     <span class="truncate">{lesson.title}</span>

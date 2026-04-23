@@ -11,8 +11,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   output: 'static',
   adapter: cloudflare(),
-  trailingSlash: 'always',
   integrations: [],
+  image: {
+    remotePatterns: [{ protocol: 'https', hostname: 'cdn.jsdelivr.net' }],
+  },
   server: {
     host: '0.0.0.0'
   },

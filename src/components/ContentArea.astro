@@ -48,11 +48,11 @@ const getPillColor = (category: string) => {
           {lesson.category}
         </div>
         <h1
-          class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-6"
+          class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1] mb-6"
         >
           {lesson.title}
         </h1>
-        <p class="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl">
+        <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
           {lesson.description}
         </p>
       </div>
@@ -73,8 +73,8 @@ const getPillColor = (category: string) => {
             </div>
           )}
           <div class="mb-12">
-            <details open class="group bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 open:shadow-lg open:ring-1 open:ring-blue-100">
-              <summary class="flex items-center justify-between p-5 cursor-pointer list-none hover:bg-slate-50 transition-colors">
+            <details open class="group bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 open:shadow-lg dark:open:shadow-none open:ring-1 open:ring-blue-100 dark:open:ring-blue-900">
+              <summary class="flex items-center justify-between p-5 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div class="flex items-center gap-3">
                   <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-open:bg-blue-600 group-open:text-white transition-all">
                     <svg
@@ -94,7 +94,7 @@ const getPillColor = (category: string) => {
                       </>
                     </svg>
                   </div>
-                  <span class="font-bold text-slate-700">
+                  <span class="font-bold text-slate-700 dark:text-slate-200">
                     Penjelasan Lengkap
                   </span>
                 </div>
@@ -115,8 +115,8 @@ const getPillColor = (category: string) => {
                 </div>
               </summary>
 
-              <div class="p-6 pt-2 border-t border-slate-50">
-                <div class="text-base md:text-lg text-slate-600 leading-relaxed space-y-2">
+              <div class="p-6 pt-2 border-t border-slate-50 dark:border-slate-800">
+                <div class="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
                   {section.explanation.split("\n").map((line) => {
                     const trimmedLine = line.trim();
                     if (!trimmedLine) return null;
@@ -127,7 +127,7 @@ const getPillColor = (category: string) => {
                       .map((part) => {
                         if (part.startsWith("**") && part.endsWith("**")) {
                           return (
-                            <strong class="text-slate-900 font-bold">
+                            <strong class="text-slate-900 dark:text-white font-bold">
                               {part.slice(2, -2)}
                             </strong>
                           );
@@ -168,7 +168,7 @@ const getPillColor = (category: string) => {
             </div>
           </div>
 
-          <div class="mt-12 border-y border-slate-100 bg-slate-50/50 -mx-4 md:-mx-12 px-4 md:px-12">
+          <div class="mt-12 border-y border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 -mx-4 md:-mx-12 px-4 md:px-12">
             <div class="max-w-3xl mx-auto">
               <div class="flex items-center gap-2 mb-8">
                 <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center">
@@ -194,7 +194,7 @@ const getPillColor = (category: string) => {
                 </span>
               </div>
 
-              <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-snug mb-6">
+              <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-200 leading-snug mb-6">
                 {section.challenge ||
                   "Tantangan: Coba praktikkan kode di atas di VS Code!"}
               </h2>
@@ -339,7 +339,7 @@ const getPillColor = (category: string) => {
 </div>
 
 <script>
-  async function setupLessonCompletion() {
+  function setupLessonCompletion() {
     const lessonContent = document.getElementById("lesson-content");
     const lessonId = lessonContent?.getAttribute("data-lesson-id");
     const toggleBtn = document.getElementById("toggle-complete-btn");
@@ -349,22 +349,21 @@ const getPillColor = (category: string) => {
 
     if (!lessonId || !toggleBtn) return;
 
-    let completedList: string[] = [];
-    let isAuthenticated = false;
+    const STORAGE_KEY = "pakkoding-completed-lessons";
 
-    // Fetch initial state
-    try {
-      const res = await fetch('/api/me');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.authenticated && data.user) {
-          isAuthenticated = true;
-          completedList = data.user.completed_lessons || [];
-        }
+    function getCompletedList(): string[] {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch {
+        return [];
       }
-    } catch (e) {
-      console.error("Failed to fetch user state", e);
     }
+
+    function saveCompletedList(list: string[]) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    let completedList = getCompletedList();
 
     function updateUI() {
       const isCompleted = completedList.includes(lessonId as string);
@@ -387,46 +386,17 @@ const getPillColor = (category: string) => {
       window.dispatchEvent(new CustomEvent("progress-updated", { detail: { completedList } }));
     }
 
-    toggleBtn.addEventListener("click", async () => {
-      if (!isAuthenticated) {
-        alert("Silakan masuk terlebih dahulu untuk menyimpan progres belajar Anda.");
-        window.location.href = '/masuk';
-        return;
-      }
-
+    toggleBtn.addEventListener("click", () => {
       const isCurrentlyCompleted = completedList.includes(lessonId as string);
-      const newStatus = !isCurrentlyCompleted;
 
-      // Optimistic update UI
-      if (newStatus) {
+      if (!isCurrentlyCompleted) {
         completedList.push(lessonId as string);
       } else {
         completedList = completedList.filter(id => id !== lessonId);
       }
-      updateUI();
 
-      // Send to server
-      try {
-        const res = await fetch('/api/progress', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lessonId, isCompleted: newStatus })
-        });
-        
-        if (!res.ok) {
-          throw new Error("Gagal menyimpan progres");
-        }
-      } catch (e) {
-        console.error(e);
-        // Revert UI on failure
-        if (!newStatus) {
-          completedList.push(lessonId as string);
-        } else {
-          completedList = completedList.filter(id => id !== lessonId);
-        }
-        updateUI();
-        alert("Gagal menyimpan progres. Silakan coba lagi.");
-      }
+      saveCompletedList(completedList);
+      updateUI();
     });
 
     updateUI();
