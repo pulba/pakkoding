@@ -5,7 +5,7 @@ const materiCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/materi" }),
   schema: z.object({
     title: z.string(),
-    category: z.enum(['HTML', 'CSS', 'JS', 'Tools', 'Koding', 'AI']),
+    category: z.enum(['HTML', 'CSS', 'JS', 'Tools', 'Koding', 'AI', 'Prompting']),
     order: z.number(),
     description: z.string(),
     content: z.array(

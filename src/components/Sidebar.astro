@@ -4,13 +4,13 @@ import { getCollection } from "astro:content";
 
 interface Props {
   activeLessonId?: string;
-  selectedCategory?: "HTML" | "CSS" | "JS" | "Tools" | "Koding" | "AI" | null;
+  selectedCategory?: "HTML" | "CSS" | "JS" | "Tools" | "Koding" | "AI" | "Prompting" | null;
 }
 
 const { activeLessonId, selectedCategory } = Astro.props;
 const categories = selectedCategory
   ? [selectedCategory]
-  : ["HTML", "CSS", "JS", "Tools", "Koding", "AI"];
+  : ["HTML", "CSS", "JS", "Tools", "Koding", "AI", "Prompting"];
 
 const allMateri = await getCollection("materi");
 const lessons = allMateri
@@ -29,6 +29,8 @@ function getIcon(category: string) {
       return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
     case "AI":
       return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>`;
+    case "Prompting":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>`;
     default:
       return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
   }
@@ -36,13 +38,13 @@ function getIcon(category: string) {
 ---
 
 <aside
-  class="fixed inset-y-0 left-0 z-[50] lg:z-[40] w-72 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 h-full overflow-y-auto transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0 md:block shrink-0 shadow-2xl md:shadow-none"
+  class="fixed inset-y-0 left-0 z-[50] lg:z-[40] w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 h-full overflow-y-auto transition-transform duration-300 transform -translate-x-full md:sticky md:top-[72px] md:h-[calc(100vh-72px)] md:translate-x-0 md:block md:bg-transparent shrink-0 shadow-2xl md:shadow-none"
   id="sidebar"
 >
   <div
-    class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between"
+    class="p-6 border-b border-slate-200/50 dark:border-slate-800/50 flex items-center justify-between"
   >
-    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">
+    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">
       Kurikulum Belajar
     </p>
     <button
@@ -64,12 +66,11 @@ function getIcon(category: string) {
           x1="6"
           y1="6"
           x2="18"
-          y2="18"></line></svg
-      >
+          y2="18"></line></svg>
     </button>
   </div>
 
-  <nav class="p-4 space-y-8">
+  <nav class="py-6 space-y-8">
     {
       categories.map((category) => {
         const categoryLessons = lessons.filter((l) => l.category === category);
@@ -77,7 +78,7 @@ function getIcon(category: string) {
 
         return (
           <div>
-            <h2 class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+            <h2 class="px-6 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
               <Fragment set:html={getIcon(category)} />
               {category}
             </h2>
@@ -87,10 +88,10 @@ function getIcon(category: string) {
                   <a
                     href={`/materi/${lesson.id}`}
                     data-lesson-id={lesson.id}
-                    class={`w-full text-left px-4 py-2 rounded-lg text-sm transition-all duration-200 flex items-center justify-between group ${
+                    class={`w-full text-left pr-4 py-2.5 transition-all duration-200 flex items-center justify-between group ${
                       activeLessonId === lesson.id
-                        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold"
-                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
+                        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-bold border-l-4 border-blue-600 pl-[20px]"
+                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white border-l-4 border-transparent pl-[20px]"
                     }`}
                   >
                     <span class="truncate">{lesson.title}</span>
