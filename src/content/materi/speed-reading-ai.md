@@ -14,10 +14,10 @@ content:
       `[Sumber Data] + [Tujuan Ekstraksi] + [Metode Triangulasi] + [Format Output]`
       
       **Bedah Komponen Formula:**
-      - **Sumber Data**:  Teks atau dokumen yang di-paste/diunggah.
-      - **Tujuan Ekstraksi**:  Informasi pasti yang dicari (Metodologi, hasil, kesimpulan).
-      - **Metode Triangulasi**:  Minta AI menyertakan nomor halaman atau kutipan asli agar tidak halusinasi.
-      - **Format Output**:  Tabel ringkasan, bullet points, atau Q&A.
+      - **Sumber Data**: Teks atau dokumen yang di-paste/diunggah.
+      - **Tujuan Ekstraksi**: Informasi pasti yang dicari (Metodologi, hasil, kesimpulan).
+      - **Metode Triangulasi**: Minta AI menyertakan nomor halaman atau kutipan asli agar tidak halusinasi.
+      - **Format Output**: Tabel ringkasan, bullet points, atau Q&A.
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -45,5 +45,5 @@ content:
       
       // TEMPLATE UTAMA:
       Berdasarkan dokumen laporan yang saya unggah ini, tolong temukan 3 masalah utama perusahaan dan solusi yang diusulkan. Sertakan kutipan kalimat aslinya (exact quote) sebagai bukti. Buatkan dalam format Tabel dengan kolom: Masalah, Solusi, Kutipan Asli.
-    challenge: Cari artikel Wikipedia panjang, copy-paste ke AI, dan minta dia mengekstrak hanya tanggal dan peristiwa penting ke dalam tabel timeline.
+    challenge: "Cari artikel Wikipedia panjang, copy-paste ke AI, dan minta dia mengekstrak hanya tanggal dan peristiwa penting ke dalam tabel timeline."
 ---

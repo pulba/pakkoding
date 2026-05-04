@@ -14,10 +14,10 @@ content:
       `[Role/Peran] + [Context/Konteks] + [Task/Tugas] + [Format/Bentuk]`
       
       **Bedah Komponen Formula:**
-      - **Role**:  Siapa AI dalam skenario ini? (Ahli Nutrisi, Programmer Senior, dll).
-      - **Context**:  Background informasi (Saya mahasiswa, budget pas-pasan, butuh cepat).
-      - **Task**:  Tugas spesifik yang harus dikerjakan AI.
-      - **Format**:  Bagaimana output disajikan? (Tabel, poin-poin, kode, esai pendek).
+      - **Role**: Siapa AI dalam skenario ini? (Ahli Nutrisi, Programmer Senior, dll).
+      - **Context**: Background informasi (Saya mahasiswa, budget pas-pasan, butuh cepat).
+      - **Task**: Tugas spesifik yang harus dikerjakan AI.
+      - **Format**: Bagaimana output disajikan? (Tabel, poin-poin, kode, esai pendek).
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -45,5 +45,5 @@ content:
       
       // TEMPLATE UTAMA:
       Bertindaklah sebagai Konsultan Bisnis Kuliner (Role). Saya mahasiswa dengan modal 500 ribu dan waktu luang hanya di malam hari (Context). Buatlah 3 ide jualan makanan ringan (Task). Sajikan dalam bentuk tabel berisi Ide, Perkiraan Modal, dan Strategi Pemasaran (Format).
-    challenge: Identifikasi satu masalah terbesarmu minggu ini, lalu tulis ulang menjadi prompt menggunakan struktur Role + Context + Task + Format.
+    challenge: "Identifikasi satu masalah terbesarmu minggu ini, lalu tulis ulang menjadi prompt menggunakan struktur Role + Context + Task + Format."
 ---

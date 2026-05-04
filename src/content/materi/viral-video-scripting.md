@@ -14,11 +14,11 @@ content:
       `[Platform & Audiens] + [Hook/Penarik] + [Retention/Isi] + [CTA/Panggilan Aksi] + [Constraint/Batasan Waktu]`
       
       **Bedah Komponen Formula:**
-      - **Platform & Audiens**:  Untuk siapa dan di mana? (TikTok untuk anak kuliahan).
-      - **Hook**:  Kalimat 3 detik pertama yang memancing rasa penasaran ekstrim.
-      - **Retention**:  Poin-poin padat yang menyelesaikan masalah (tanpa basa-basi).
-      - **CTA**:  Instruksi jelas di akhir (Save video ini, klik link bio).
-      - **Constraint**:  Batasan teknis (Maksimal 60 detik, tone bahasa gaul).
+      - **Platform & Audiens**: Untuk siapa dan di mana? (TikTok untuk anak kuliahan).
+      - **Hook**: Kalimat 3 detik pertama yang memancing rasa penasaran ekstrim.
+      - **Retention**: Poin-poin padat yang menyelesaikan masalah (tanpa basa-basi).
+      - **CTA**: Instruksi jelas di akhir (Save video ini, klik link bio).
+      - **Constraint**: Batasan teknis (Maksimal 60 detik, tone bahasa gaul).
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -46,5 +46,5 @@ content:
       
       // TEMPLATE UTAMA:
       Buat script TikTok untuk mahasiswa (Platform & Audiens). Gunakan hook yang menakutkan tentang efek begadang pada otak (Hook). Berikan 3 tips cepat mengatasi insomnia (Retention). Akhiri dengan suruh audiens tag teman mereka yang suka begadang (CTA). Durasi total maksimal 45 detik, gunakan bahasa gaul Jakarta (Constraint).
-    challenge: Buka artikel blog acak, lalu gunakan formula ini untuk menyuruh AI mengubahnya menjadi naskah TikTok siap rekam.
+    challenge: "Buka artikel blog acak, lalu gunakan formula ini untuk menyuruh AI mengubahnya menjadi naskah TikTok siap rekam."
 ---

@@ -181,11 +181,21 @@ aiCurriculum.forEach((phase) => {
 
     const data = detailedContent[material.slug] || getExpertFallback(material.title);
 
+    // Helper: safely escape a string for YAML double-quoted scalar
+    const yamlEscape = (str: string) => str.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+
+    // Helper: split component string on the FIRST colon only
+    const splitComponent = (comp: string) => {
+      const idx = comp.indexOf(':');
+      if (idx === -1) return { key: comp, val: '' };
+      return { key: comp.substring(0, idx).trim(), val: comp.substring(idx + 1).trim() };
+    };
+
     const content = `---
-title: "${material.title}"
+title: "${yamlEscape(material.title)}"
 category: Prompting
 order: ${globalOrder++}
-description: "${material.desc.replace(/"/g, '\\"')}"
+description: "${yamlEscape(material.desc)}"
 content:
   - explanation: |
       **Kenapa Skill Ini Krusial?**
@@ -197,7 +207,7 @@ content:
       \`${data.formula}\`
       
       **Bedah Komponen Formula:**
-      ${data.components.map((comp: string) => `- **${comp.split(':')[0]}**: ${comp.split(':')[1] || ''}`).join('\n      ')}
+      ${data.components.map((comp: string) => { const c = splitComponent(comp); return `- **${c.key}**: ${c.val}`; }).join('\n      ')}
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -223,7 +233,7 @@ content:
       
       // TEMPLATE UTAMA:
       ${data.goodPrompt}
-    challenge: ${data.challenge}
+    challenge: "${yamlEscape(data.challenge)}"
 ---
 `;
 

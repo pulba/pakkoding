@@ -14,10 +14,10 @@ content:
       `[Tujuan Utama] + [Tingkat Pemahaman Saya] + [Analogi yang Diinginkan] + [Output Bertahap]`
       
       **Bedah Komponen Formula:**
-      - **Tujuan Utama**:  Apa yang sebenarnya ingin kamu capai.
-      - **Tingkat Pemahaman**:  Beri tahu AI seberapa banyak yang sudah kamu tahu (misal
-      - **Analogi**:  Minta AI menjelaskan menggunakan perumpamaan agar mudah dimengerti.
-      - **Output Bertahap**:  Minta penjelasan selangkah demi selangkah, jangan sekaligus.
+      - **Tujuan Utama**: Apa yang sebenarnya ingin kamu capai.
+      - **Tingkat Pemahaman**: Beri tahu AI seberapa banyak yang sudah kamu tahu (misal: 'Saya pemula total').
+      - **Analogi**: Minta AI menjelaskan menggunakan perumpamaan agar mudah dimengerti.
+      - **Output Bertahap**: Minta penjelasan selangkah demi selangkah, jangan sekaligus.
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -45,5 +45,5 @@ content:
       
       // TEMPLATE UTAMA:
       Saya ingin memahami dasar quantum computing. Tingkat pemahaman saya adalah anak SMA jurusan IPS. Tolong jelaskan konsepnya menggunakan analogi permainan sepak bola. Berikan penjelasannya selangkah demi selangkah.
-    challenge: Gunakan formula di atas untuk mempelajari satu topik sulit yang selalu membuatmu bingung (misal: Pajak, Coding, atau Fisika).
+    challenge: "Gunakan formula di atas untuk mempelajari satu topik sulit yang selalu membuatmu bingung (misal: Pajak, Coding, atau Fisika)."
 ---

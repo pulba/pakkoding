@@ -14,10 +14,10 @@ content:
       `[Peran Mentor] + [Topik Spesifik] + [Aturan Feynman] + [Instruksi Uji]`
       
       **Bedah Komponen Formula:**
-      - **Peran Mentor**:  'Bertindaklah sebagai dosen ahli yang sabar.'
-      - **Topik Spesifik**:  Konsep tepat yang ingin dipahami.
-      - **Aturan Feynman**:  Larang AI menggunakan jargon. Jika pakai istilah sulit, wajib jelaskan dengan analogi.
-      - **Instruksi Uji**:  Minta AI mengeksekusi tes pemahaman di akhir penjelasan.
+      - **Peran Mentor**: 'Bertindaklah sebagai dosen ahli yang sabar.'
+      - **Topik Spesifik**: Konsep tepat yang ingin dipahami.
+      - **Aturan Feynman**: Larang AI menggunakan jargon. Jika pakai istilah sulit, wajib jelaskan dengan analogi.
+      - **Instruksi Uji**: Minta AI mengeksekusi tes pemahaman di akhir penjelasan.
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -45,5 +45,5 @@ content:
       
       // TEMPLATE UTAMA:
       Bertindaklah sebagai mentor teknologi yang sangat pintar tapi ramah. Tolong jelaskan konsep 'Machine Learning' kepada saya. Aturan: Jangan gunakan jargon teknis sama sekali. Jika harus, jelaskan dengan analogi kegiatan sehari-hari di rumah. Setelah menjelaskan, berikan saya 1 pertanyaan studi kasus untuk menguji apakah saya benar-benar paham.
-    challenge: Jelaskan kembali satu konsep yang baru AI ajarkan kepadamu di kolom chat, dan minta dia menilai seberapa akurat penjelasanmu.
+    challenge: "Jelaskan kembali satu konsep yang baru AI ajarkan kepadamu di kolom chat, dan minta dia menilai seberapa akurat penjelasanmu."
 ---

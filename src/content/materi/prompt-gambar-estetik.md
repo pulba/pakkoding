@@ -14,11 +14,11 @@ content:
       `[Subject/Subjek] + [Action/Aksi] + [Environment/Latar] + [Style/Gaya Visual] + [Lighting & Camera/Pencahayaan & Kamera]`
       
       **Bedah Komponen Formula:**
-      - **Subject**:  Siapa atau apa fokus utama gambarnya? (Misal
-      - **Action**:  Apa yang sedang dilakukan subjek? (Minum kopi, berlari menerjang hujan).
-      - **Environment**:  Di mana lokasinya? (Di kedai kopi neon Tokyo, di hutan pinus berkabut).
-      - **Style**:  Gaya seninya seperti apa? (Photorealistic, Anime, Oil Painting, 3D Render).
-      - **Lighting & Camera**:  Spesifikasi teknis (Cinematic lighting, 50mm lens, golden hour, drone shot).
+      - **Subject**: Siapa atau apa fokus utama gambarnya? (Misal: Kucing jalanan, robot cyberpunk).
+      - **Action**: Apa yang sedang dilakukan subjek? (Minum kopi, berlari menerjang hujan).
+      - **Environment**: Di mana lokasinya? (Di kedai kopi neon Tokyo, di hutan pinus berkabut).
+      - **Style**: Gaya seninya seperti apa? (Photorealistic, Anime, Oil Painting, 3D Render).
+      - **Lighting & Camera**: Spesifikasi teknis (Cinematic lighting, 50mm lens, golden hour, drone shot).
       
       **Studi Kasus: Amatir vs Master**
       ❌ **Prompt Jelek (Amatir):**
@@ -46,5 +46,5 @@ content:
       
       // TEMPLATE UTAMA:
       A street cat drinking espresso from a tiny cup (Subject & Action), sitting on a neon-lit cyber-cafe balcony in neo-Tokyo (Environment), highly detailed photorealistic illustration (Style), cinematic cyberpunk lighting, neon reflections, 85mm lens, depth of field (Lighting & Camera).
-    challenge: Gunakan formula ini di Bing Image Creator / DALL-E untuk membuat poster film fiksi ilmiah karanganmu sendiri!
+    challenge: "Gunakan formula ini di Bing Image Creator / DALL-E untuk membuat poster film fiksi ilmiah karanganmu sendiri!"
 ---
